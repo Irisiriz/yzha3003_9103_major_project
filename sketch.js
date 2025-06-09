@@ -15,6 +15,7 @@ let colour = {
 let vLines = [1, 3, 7, 12, 21, 29, 32];
 let hLines = [1, 5, 11, 13, 16, 19, 27, 32];
 
+// Blocks
 let blocks = [
   {col: 1, row:  4, w: 1, h: 1, colour: colour.G},
   {col: 1, row: 10, w: 3, h: 3, colour: colour.R},
@@ -39,7 +40,14 @@ function setup() {
 
 function draw() {
   background(colour.W);
-  
+
+  /*
+  Referencing MDN, we using JavaScript’s array.forEach() to loop 
+  through the grid-index arrays because it performs the same 
+  iteration as a classic for loop but is cleaner and more readable.
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+  */
+
   // Draw lines
   fill(colour.Y);
   vLines.forEach(c => rect(c * grid, 0, grid, height));
