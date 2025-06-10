@@ -41,7 +41,7 @@ function setup() {
 function draw() {
   background(colour.W);
 
-  // Draw lines
+  // Draw yellow grid lines
   fill(colour.Y);
   vLines.forEach(c => rect(c * grid, 0, grid, height));
   hLines.forEach(r => rect(0, r * grid, wide, grid));
@@ -49,18 +49,15 @@ function draw() {
   // Draw breathing dots
   breathingDashesOnLines();
 
-  // Draw Blocks
-  blocks.forEach(b => {
-    fill(b.colour);
-    rect(b.col * grid, b.row * grid, b.w * grid, b.h * grid);
-  });
+  // Draw animated blocks
+  barsInsideBlocks();
 }
 
 function breathingDashesOnLines() {
   let accentBase = [colour.R, colour.B, colour.G];
   let scale  = 0.15;
-  let speed  = 0.01;
-  let threshold = 0.45;
+  let speed  = 0.015;
+  let threshold = 0.55;
   
   // Vertical lines
   vLines.forEach((c) => {
@@ -97,4 +94,29 @@ function breathingDashesOnLines() {
   iteration as a classic for loop but is cleaner and more readable.
   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
   */
+}
+
+function barsInsideBlocks(){
+  let barWidth = 3;
+  let probability = 0.3;
+  let speed = 0.4;
+
+  blocks.forEach((b, i) => {
+    let baseColour = color(b.colour);
+    /*
+    Use setAlpha() to set the transparency of a colour
+    https://p5js.org/reference/p5.Color/setAlpha/
+    */
+    baseColour.setAlpha(170);
+    fill(baseColour);
+    rect(b.col * grid, b.row * grid, b.w * grid, b.h * grid);
+
+    for (let x = 0; x < b.w * grid; x += barWidth) {
+      let n = noise((x + i * 100) * 0.05, frameCount * speed);
+      if (n > 1 - probability) {
+        fill(b.colour);
+        rect(b.col * grid + x, b.row * grid, barWidth, b.h * grid);
+      }
+    }
+  });
 }
