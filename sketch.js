@@ -11,7 +11,7 @@ let colour = {
   G : '#d8d8d8',
 };
 
-// Grid
+// Yellow grid lines
 let vLines = [1, 3, 7, 12, 21, 29, 32];
 let hLines = [1, 5, 11, 13, 16, 19, 27, 32];
 
@@ -35,27 +35,20 @@ let blocks = [
 
 function setup() {
   createCanvas(wide, height);
-  noLoop();
+  noStroke();
 }
 
 function draw() {
   background(colour.W);
 
-  /*
-  Referencing MDN, we using JavaScript’s array.forEach() to loop 
-  through the grid-index arrays because it performs the same 
-  iteration as a classic for loop but is cleaner and more readable.
-  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
-  */
-
   // Draw lines
   fill(colour.Y);
   vLines.forEach(c => rect(c * grid, 0, grid, height));
   hLines.forEach(r => rect(0, r * grid, wide, grid));
-  
-  // Draw Dots
-  colourDashesOnLines();
-  
+
+  // Draw breathing dots
+  breathingDashesOnLines();
+
   // Draw Blocks
   blocks.forEach(b => {
     fill(b.colour);
@@ -63,24 +56,41 @@ function draw() {
   });
 }
 
-function colourDashesOnLines() {
-  let accent = [colour.Y, colour.R, colour.B, colour.G];
-
-  vLines.forEach((c, idx) => {
-    for (let r = 0; r < height/grid; r++) {
-      if (random() < 0.33) {
-        fill(accent[(r + idx) % accent.length]);
+function breathingDashesOnLines() {
+  let accentBase = [colour.R, colour.B, colour.G];
+  let scale  = 0.15;
+  let speed  = 0.01;
+  let threshold = 0.45;
+  
+  // Vertical lines
+  vLines.forEach((c) => {
+    for (let r = 0; r < height / grid; r++) {
+      let n = noise(c * scale, r * scale, frameCount * speed);
+      if (n > threshold) {
+        let baseColour = accentBase[(c + r) % accentBase.length];
+        let glow = lerpColor(color(colour.W), color(baseColour), n);
+        fill(glow);
         rect(c * grid, r * grid, grid, grid);
       }
     }
   });
   
-  hLines.forEach((r, idx) => {
-    for (let c = 0; c < wide/grid; c++) {
-      if (random() < 0.33) {
-        fill(accent[(c + idx + 2) % accent.length]);
+  // Horizontal lines
+  hLines.forEach((r) => {
+    for (let c = 0; c < wide / grid; c++) {
+      let n = noise(c * scale, r * scale, frameCount * speed + 50);
+      if (n > threshold) {
+        let baseColour = accentBase[(c + r) % accentBase.length];
+        let glow = lerpColor(color(colour.W), color(baseColour), n);
+        fill(glow);
         rect(c * grid, r * grid, grid, grid);
       }
     }
   });
+  /*
+  Referencing MDN, I using JavaScript’s array.forEach() to loop 
+  through the grid-index arrays because it performs the same 
+  iteration as a classic for loop but is cleaner and more readable.
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+  */
 }
