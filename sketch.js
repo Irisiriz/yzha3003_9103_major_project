@@ -68,6 +68,10 @@ function breathingDashesOnLines() {
       let n = noise(c * scale, r * scale, frameCount * speed);
       if (n > threshold) {
         let baseColour = accentBase[(c + r) % accentBase.length];
+         /*
+        Use lerpColor() to blend two colours to find a third colour between them.
+        https://p5js.org/reference/p5/lerpColor/
+        */
         let glow = lerpColor(color(colour.W), color(baseColour), n);
         fill(glow);
         rect(c * grid, r * grid, grid, grid);
