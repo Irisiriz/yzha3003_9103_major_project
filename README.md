@@ -18,11 +18,17 @@ My animation differs from my group members’ approaches:
 > *Note: Each member may make small adjustments to their intended effects depending on implementation. Please refer to the final outcomes.*
 ### - Inspiration
 - 1. [Broadway Data Boogie Woogie -- Noah Garcia, Ivan Himanen](https://www.dxd2021.com/broadwaydataboogiewoogie)
+
 ![An image of Broadway Data Boogie Woogie](readmeImages/broadwayAnimatedSquare.gif)
+
 - 2. [Pixel City -- Draggle](https://www.newgrounds.com/art/view/draggle/pixel-city)
+  
 ![An image of Pixel City](readmeImages/pixelCity.png)
+
 - 3. [Pixel Night City -- N](https://www.artstation.com/artwork/RnoYnv)
+
 ![An image of Pixel Night City](readmeImages/pixelNightCity.jpg)
+
 > These visuals inspired me to use Perlin noise to recreate the random rhythm of light in urban nightscapes.
 ### - Technical Explanation
 The animation in my individual work is driven entirely by Perlin noise over time, using `noise(x, y, t)` to control both brightness and visual randomness.
@@ -46,7 +52,7 @@ I use Perlin noise to smoothly vary the brightness of small coloured squares alo
 - `frameCount * speed` acts as the time input for the noise function.
 - `lerpColor()` blends from white to a base colour depending on n, creating a breathing effect.
 - This creates a smooth transition that mimics how windows in a city light up at night.
-#### 2. LED-style Bars Inside Blocks (`barsInsideBlocks()`):
+#### 2. LED-style bars inside blocks (`barsInsideBlocks()`):
 In large coloured blocks, I draw random vertical bars that flicker on and off based on Perlin noise.
 ```
   let n = noise((x + i * 100) * 0.05, frameCount * speed);
@@ -58,7 +64,7 @@ In large coloured blocks, I draw random vertical bars that flicker on and off ba
 ```
 - Here, `n` is recalculated per bar and per frame to simulate randomness.
 - Only bars where `n` exceeds the threshold `(1 - density)` are drawn.
-The base block colour is drawn first with reduced opacity using `setAlpha(170)`.
+- The base block colour is drawn first with reduced opacity using `setAlpha(170)`.
 ```
 // Draw semi-transparent base rectangle
 let baseColour = color(b.colour);
@@ -80,12 +86,12 @@ rect(b.col * grid, b.row * grid, b.w * grid, b.h * grid);
 - Used existing data structures (`vLines`, `hLines`, `blocks`) without modification.
 ### - Tools & References 
 I referred to examples from the **official p5.js documentation** for the use of `lerpColor()` and `setAlpha()`, as well as to the **MDN documentation** for `Array.prototype.forEach()`. The relevant links are already included in the code comments.
-How it works and why I used it:
-- `lerpColor()`:
+- How it works and why I used it:
+  - `lerpColor()`:
     This function blends two colours based on a value between 0 and 1. I used it to smoothly fade small squares between white and a base colour, controlled by Perlin noise. This created a “breathing” light effect that felt more natural than a hard switch between two colours.
-- `setAlpha()`:
+  - `setAlpha()`:
     This method lets me adjust the transparency of a p5.Color object. I used it to make the large block backgrounds partially transparent, allowing the animated vertical bars to stand out more clearly on top of them.
-- `forEach()`:
+  - `forEach()`:
     Instead of a traditional `for` loop, I used `forEach()` for cleaner iterating through `vLines`, `hLines`, and `blocks`. This made my code easier to read.
 
 
