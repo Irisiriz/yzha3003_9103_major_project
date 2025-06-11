@@ -23,9 +23,69 @@ My animation differs from my group members’ approaches:
 ![An image of Pixel City](readmeImages/pixelCity.png)
 - 3. [Pixel Night City -- N](https://www.artstation.com/artwork/RnoYnv)
 ![An image of Pixel Night City](readmeImages/pixelNightCity.jpg)
-These visuals inspired me to use Perlin noise to recreate the random rhythm of light in urban nightscapes.
-### - Technical Implementation
+> These visuals inspired me to use Perlin noise to recreate the random rhythm of light in urban nightscapes.
+### - Technical Explanation
+The animation in my individual work is driven entirely by Perlin noise over time, using `noise(x, y, t)` to control both brightness and visual randomness.
+**1. Breathing small squares on yellow lines** (`breathingDashesOnLines()`):
+I use Perlin noise to smoothly vary the brightness of small coloured squares along yellow grid lines.
+```
+  let n = noise(c * scale, r * scale, frameCount * speed);
+  if (n > threshold) {
+    // The base colours are fixed in rows and columns
+    let baseColour = accentBase[(c + r) % accentBase.length];
+    /*
+    Use lerpColor() to blend two colours to find a third colour between them.
+    https://p5js.org/reference/p5/lerpColor/
+    */
+    // Transition between white and base colour to simulate the on and off
+    let glow = lerpColor(color(colour.W), color(baseColour), n);
+    fill(glow);
+    rect(c * grid, r * grid, grid, grid);
+  }
+```
+- `frameCount * speed` acts as the time input for the noise function.
+- `lerpColor()` blends from white to a base colour depending on n, creating a breathing effect.
+- This creates a smooth transition that mimics how windows in a city light up at night.
+**2. LED-style Bars Inside Blocks** (`barsInsideBlocks()`):
+In large coloured blocks, I draw random vertical bars that flicker on and off based on Perlin noise.
+```
+  let n = noise((x + i * 100) * 0.05, frameCount * speed);
+  // Decide whether to light bar
+  if (n > 1 - density) {
+    fill(b.colour);
+    rect(b.col * grid + x, b.row * grid, barWidth, b.h * grid);
+  }
+```
+- Here, `n` is recalculated per bar and per frame to simulate randomness.
+- Only bars where `n` exceeds the threshold `(1 - density)` are drawn.
+The base block colour is drawn first with reduced opacity using `setAlpha(170)`.
+```
+// Draw semi-transparent base rectangle
+let baseColour = color(b.colour);
+/*
+Use setAlpha() to set the transparency of a colour
+https://p5js.org/reference/p5.Color/setAlpha/
+*/
+baseColour.setAlpha(170);
+fill(baseColour);
+rect(b.col * grid, b.row * grid, b.w * grid, b.h * grid);
+```
+- This gives the appearance of softly glowing panels with occasional bright bars, mimicing a flickering LED billboard.
 ### - Code Adjustments
+- Added two new functions:
+  - `breathingDashesOnLines()`: animates small squares on grid lines using Perlin noise and colour blending.
+  - `barsInsideBlocks()`: adds dynamic vertical bars within large blocks, creating an LED-like flicker effect.
+- Removed `noLoop()` from `setup()` to enable continuous drawing and animation using the `draw()` loop.
+- Introduced Perlin noise and animation parameters, including `speed`, `scale`, `threshold`, and `density` to control movement and brightness variation.
+- Used existing data structures (`vLines`, `hLines`, `blocks`) without modification.
 ### - Tools & References 
+I referred to examples from the **official p5.js documentation** for the use of `lerpColor()` and `setAlpha()`, as well as to the **MDN documentation** for `Array.prototype.forEach()`. The relevant links are already included in the code comments.
+How it works and why I used it:
+- `lerpColor()`:
+    This function blends two colours based on a value between 0 and 1. I used it to smoothly fade small squares between white and a base colour, controlled by Perlin noise. This created a “breathing” light effect that felt more natural than a hard switch between two colours.
+- `setAlpha()`:
+    This method lets me adjust the transparency of a p5.Color object. I used it to make the large block backgrounds partially transparent, allowing the animated vertical bars to stand out more clearly on top of them.
+- `forEach()`:
+    Instead of a traditional `for` loop, I used `forEach()` for cleaner iterating through `vLines`, `hLines`, and `blocks`. This made my code easier to read.
 
 
