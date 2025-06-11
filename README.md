@@ -26,7 +26,7 @@ My animation differs from my group members’ approaches:
 > These visuals inspired me to use Perlin noise to recreate the random rhythm of light in urban nightscapes.
 ### - Technical Explanation
 The animation in my individual work is driven entirely by Perlin noise over time, using `noise(x, y, t)` to control both brightness and visual randomness.
-**1. Breathing small squares on yellow lines** (`breathingDashesOnLines()`):
+#### 1. Breathing small squares on yellow lines (`breathingDashesOnLines()`):
 I use Perlin noise to smoothly vary the brightness of small coloured squares along yellow grid lines.
 ```
   let n = noise(c * scale, r * scale, frameCount * speed);
@@ -46,7 +46,7 @@ I use Perlin noise to smoothly vary the brightness of small coloured squares alo
 - `frameCount * speed` acts as the time input for the noise function.
 - `lerpColor()` blends from white to a base colour depending on n, creating a breathing effect.
 - This creates a smooth transition that mimics how windows in a city light up at night.
-**2. LED-style Bars Inside Blocks** (`barsInsideBlocks()`):
+#### 2. LED-style Bars Inside Blocks (`barsInsideBlocks()`):
 In large coloured blocks, I draw random vertical bars that flicker on and off based on Perlin noise.
 ```
   let n = noise((x + i * 100) * 0.05, frameCount * speed);
